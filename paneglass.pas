@@ -5,8 +5,10 @@ unit PaneGlass;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, Windows;// painGlassop;
+  Classes, SysUtils, FileUtil, Forms, Controls, Windows, Graphics, Dialogs, Menus,
+  ExtCtrls, StdCtrls,  LCLIntf, LCLType;
+// painGlassop;
+
 
 type
 
@@ -14,6 +16,8 @@ type
 
   Tpanefrm = class(TForm)
     exit1: TMenuItem;
+    prankImage: TImage;
+    prankMode: TMenuItem;
     Ontop1: TMenuItem;
     Resize1: TMenuItem;
     Settings1: TMenuItem;
@@ -37,6 +41,7 @@ type
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Ontop1Click(Sender: TObject);
+    procedure prankModeClick(Sender: TObject);
     procedure Settings1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ClickThrough1Click(Sender: TObject);
@@ -210,6 +215,35 @@ begin
     panefrm.FormStyle := fsStayOnTop;
     panefrm.BringToFront;
   end;
+end;
+
+procedure Tpanefrm.prankModeClick(Sender: TObject);
+var
+  MyBitmap: TBitmap;
+  ScreenDC: HDC;
+ // WrkJpg: TJpegImage;
+
+
+begin
+      Application.Minimize;
+      Application.ProcessMessages;
+
+      Sleep(32);
+
+      MyBitmap := TBitmap.Create;
+      ScreenDC := GetDC(0);
+      MyBitmap.LoadFromDevice(ScreenDC);
+
+      Application.Restore;
+      Application.BringToFront;
+
+
+      prankImage.Align:=alClient;
+      prankImage.Visible:=True;
+      //need to set to full screen mode and enable click through with 255 transparancy.
+      prankImage.Canvas.Draw(0,0,MyBitmap);
+
+
 end;
 
 procedure Tpanefrm.Settings1Click(Sender: TObject);

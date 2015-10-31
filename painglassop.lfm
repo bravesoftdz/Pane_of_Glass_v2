@@ -1,7 +1,7 @@
 object painGlassOPform: TpainGlassOPform
-  Left = 297
+  Left = 341
   Height = 174
-  Top = 295
+  Top = 243
   Width = 259
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
   Windows, Messages, Variants,
-  StdCtrls, ExtCtrls, ComCtrls, Menus, shellapi, Buttons;
+  StdCtrls, ExtCtrls, ComCtrls, Menus, shellapi, Buttons, LCLIntf, LCLType;
   
 
 type
