@@ -110,6 +110,10 @@ object panefrm: Tpanefrm
       Caption = 'Prank Mode'
       OnClick = prankModeClick
     end
+    object DisablePrank: TMenuItem
+      Caption = 'Disable Prank  Mode'
+      OnClick = DisablePrankClick
+    end
     object N1: TMenuItem
       Caption = '-'
     end

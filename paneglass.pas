@@ -16,6 +16,7 @@ type
 
   Tpanefrm = class(TForm)
     exit1: TMenuItem;
+    DisablePrank: TMenuItem;
     prankImage: TImage;
     prankMode: TMenuItem;
     Ontop1: TMenuItem;
@@ -36,6 +37,7 @@ type
     f1: TMenuItem;
     pane_PopupMenu: TPopupMenu;
     pane_TrayIcon: TTrayIcon;
+    procedure DisablePrankClick(Sender: TObject);
     procedure FormDblClick(Sender: TObject);
     procedure exit1Click(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
@@ -159,6 +161,12 @@ begin
  end;
 end;
 
+procedure Tpanefrm.DisablePrankClick(Sender: TObject);
+begin
+  prankImage.Visible := False;
+  DClickModeClick(Sender);
+end;
+
 procedure Tpanefrm.exit1Click(Sender: TObject);
 begin
 if ClickThrough then
@@ -237,7 +245,7 @@ begin
       Application.Restore;
       Application.BringToFront;
 
-
+      ResizePaneForScreen(7);
       prankImage.Align:=alClient;
       prankImage.Visible:=True;
       //need to set to full screen mode and enable click through with 255 transparancy.
