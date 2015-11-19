@@ -1,29 +1,31 @@
 object panefrm: Tpanefrm
-  Left = 269
-  Height = 304
-  Top = 169
-  Width = 410
+  Left = 425
+  Height = 239
+  Top = 135
+  Width = 370
   HorzScrollBar.Page = 90
   VertScrollBar.Page = 90
   AlphaBlend = True
   AutoScroll = True
   BorderIcons = [biSystemMenu]
   Caption = 'Pane of Glass'
-  ClientHeight = 304
-  ClientWidth = 410
+  ClientHeight = 239
+  ClientWidth = 370
   OnCreate = FormCreate
   OnDblClick = FormDblClick
   OnMouseDown = FormMouseDown
+  OnResize = prankImageResize
   OnShow = FormShow
   PopupMenu = pane_PopupMenu
   Position = poScreenCenter
   LCLVersion = '1.4.2.0'
   object prankImage: TImage
     Left = 0
-    Height = 304
+    Height = 239
     Top = 0
-    Width = 410
+    Width = 370
     Align = alClient
+    OnResize = prankImageResize
     Visible = False
   end
   object pane_PopupMenu: TPopupMenu

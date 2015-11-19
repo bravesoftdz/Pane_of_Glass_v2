@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Windows, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls,  LCLIntf, LCLType;
+  ExtCtrls, StdCtrls,  LCLIntf, LCLType, ComCtrls;
 // painGlassop;
 
 
@@ -37,12 +37,14 @@ type
     f1: TMenuItem;
     pane_PopupMenu: TPopupMenu;
     pane_TrayIcon: TTrayIcon;
+    //procedure Button1Click(Sender: TObject);
     procedure DisablePrankClick(Sender: TObject);
     procedure FormDblClick(Sender: TObject);
     procedure exit1Click(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Ontop1Click(Sender: TObject);
+    procedure prankImageResize(Sender: TObject);
     procedure prankModeClick(Sender: TObject);
     procedure Settings1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -68,10 +70,17 @@ type
     procedure f1Click(Sender: TObject);
   private
     { private declarations }
-    posT,posL,posW,posH : integer;
-     ClickWindowT,ClickWindowL : integer;
-     Rpane, OntopNow,ResizedDone,MultiMon : boolean;
-     windowStyle : integer;
+    posT : integer;
+    posL : integer;
+    posW : integer;
+    posH : integer;
+    clickWindowT : integer;
+    ClickWindowL : integer;
+    Rpane : boolean;
+    OntopNow : boolean;
+    ResizedDone : boolean;
+    MultiMon : boolean;
+    windowStyle : integer;
     public
     { public declarations }
     ClickThrough,onTop_CT : boolean;
@@ -137,6 +146,7 @@ if screen.MonitorCount > 1 then
     f1.ShortCut := ShortCut(Word('A'), [ssCtrl]);
   end;
 end;
+
 
 procedure paneresizeable();
 begin
@@ -225,6 +235,17 @@ begin
   end;
 end;
 
+procedure Tpanefrm.prankImageResize(Sender: TObject);
+var
+  M : TMonitor;
+begin
+  M := Screen.MonitorFromWindow(Handle);
+  //Label1.caption :=IntToStr (panefrm.Top);
+  //Label2.caption :=IntToStr (panefrm.Bottom);
+  //Label3.caption :=IntToStr (panefrm.Right);
+  //Label4.caption :=IntToStr (panefrm.Left);
+end;
+
 procedure Tpanefrm.prankModeClick(Sender: TObject);
 var
   MyBitmap: TBitmap;
@@ -276,7 +297,7 @@ if panefrm.Ontop1.checked then
   end;
 if panefrm.BorderStyle = bssizeable then
   begin
-    paneresizeable();
+    //paneresizeable();
     panefrm.Rpane := true;
   end;
 end;
@@ -316,7 +337,7 @@ if ClickThrough then
        if painGlassOPform.Visible then
          painGlassOPform.Hide;
        //sets window as top screen mode
-       SetWindowPos(Self.Handle,HWND_TOPMOST,0,0,0,0,SWP_NOACTIVATE or SWP_NOMOVE or SWP_NOSIZE);
+       SetWindowPos(Self.Handle,HWND_TOPMOST,0,0,0,0, SWP_NOACTIVATE or SWP_NOMOVE or SWP_NOSIZE );
        painGlassOPform.SetTop();
        onTop_CT := true;
        panefrm.FormStyle:=fsSystemStayOnTop;
@@ -363,11 +384,40 @@ if ClickThrough and ResizedDone then
  end;
 end; (*WMMove*)
 
+{procedure MoveFormToTopOfRightmostMonitor(Form: TForm);
+var
+  i: Integer;
+  Monitor, RightMostMonitor: TMonitor;
+begin
+  RightMostMonitor := Screen.Monitors[0];
+  for i := 1 to Screen.MonitorCount-1 do
+  begin
+    Monitor := Screen.Monitors[i];
+    if Monitor.Left+Monitor.Width > RightMostMonitor.Left+RightMostMonitor.Width then
+      Monitor := RightMostMonitor;
+  end;
+  Form.Left := Monitor.Left+Monitor.Width-Form.Left;
+  Form.Top := Monitor.Top;
+end;
+var MaxFormHeight: Integer;
+    NewFormHeight: Integer;
+    M: TMonitor;
+begin
+  // Get the monitor that's hosting the form
+  M := M := Screen.MonitorFromWindow(Handle);
+  MaxFormHeight := M.WorkAreaRect.Bottom - M.WorkAreaRect.Top - Top; // Take into account actual available monitor space and the Top of the window
+  // Do your stuff to calculate NewFormHeight
+  if NewFormHeight > MaxFormHeight then
+    NewFormHeight := MaxFormHeight;
+  Height := NewFormHeight;
+end;}
+
+
 procedure Tpanefrm.ResizePaneForScreen(mode : integer);
 var Mver,Mhor : integer;
     Mwidth, Mheight, Mtop, Mleft : integer;
     i : integer;
-    MontInfo : TMonitor;
+    MontInfo, MonitorInfo : TMonitor;
 begin
 //0 horizonal left
 //1 horizonal right
@@ -380,7 +430,8 @@ begin
 
 //even number base at (0,0)
 
-MontInfo := Screen.MonitorFromWindow(Self.Handle);
+MonitorInfo := Screen.MonitorFromWindow(Handle);
+
 {Mheight :=  Screen.Height;
 Mheight := Screen.WorkAreaHeight;
 Mwidth := Screen.WorkAreaWidth;
@@ -389,10 +440,14 @@ Mleft := Screen.WorkAreaLeft;
 
 if Screen.MonitorCount > 1 then
   begin  //multi mointor set up}
-    Mwidth := MontInfo.WorkareaRect.Right - MontInfo.WorkareaRect.Left;
-    Mheight:= MontInfo.WorkareaRect.Bottom - MontInfo.WorkareaRect.Top;
-    Mtop := MontInfo.WorkareaRect.Top;
-    Mleft := MontInfo.WorkareaRect.Left;
+    Mwidth := MonitorInfo.WorkareaRect.Right - MonitorInfo.WorkareaRect.Left;
+    Mheight:= MonitorInfo.WorkareaRect.Bottom - MonitorInfo.WorkareaRect.Top;
+    //Mtop := MonitorInfo.WorkareaRect.Top;
+    Mtop := MonitorInfo.Top;
+    //Label3.Caption := inttostr(MonitorInfo.Top);
+    //Label2.Caption := inttostr(MonitorInfo.LEFt);
+    Mleft := MonitorInfo.WorkareaRect.Left;
+    //Mleft :=  MonitorInfo.Left+MonitorInfo.Width-panefrm.Left;
 //  end;
 Mhor := Mwidth div 2;
 Mver := Mheight div 2;
@@ -442,10 +497,10 @@ case mode of
     ClickWindowL := panefrm.Left;
    end;
 6: begin
-     panefrm.Width := MontInfo.Width;
-     panefrm.Height := MontInfo.Height;
-     panefrm.Top := MontInfo.Top;
-     panefrm.Left := MontInfo.left;
+     panefrm.Width := MonitorInfo.Width;
+     panefrm.Height := MonitorInfo.Height;
+     panefrm.Top := MonitorInfo.Top;
+     panefrm.Left := MonitorInfo.left;
    end;
 7: begin
      panefrm.Width := Screen.DesktopWidth;

@@ -4,14 +4,14 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Default"/>
-    <Units Count="5">
+    <Units Count="6">
       <Unit0>
         <Filename Value="PaneOfGlass.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="2"/>
         <TopLine Value="2"/>
         <CursorPos X="63" Y="20"/>
-        <UsageCount Value="40"/>
+        <UsageCount Value="43"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -22,9 +22,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="PaneGlass"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="376"/>
-        <CursorPos X="25" Y="370"/>
-        <UsageCount Value="40"/>
+        <TopLine Value="64"/>
+        <CursorPos X="11" Y="75"/>
+        <UsageCount Value="43"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -35,151 +35,169 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="painGlassOP"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="506"/>
-        <CursorPos X="28" Y="526"/>
-        <UsageCount Value="40"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="258"/>
+        <CursorPos X="18" Y="368"/>
+        <UsageCount Value="43"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="CheckPrevious.pas"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="79"/>
         <CursorPos X="25" Y="61"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
         <Filename Value="C:\lazarus\lcl\include\control.inc"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="3645"/>
         <CursorPos Y="3657"/>
         <UsageCount Value="16"/>
-        <Loaded Value="True"/>
       </Unit4>
+      <Unit5>
+        <Filename Value="C:\lazarus\lcl\controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1681"/>
+        <CursorPos X="51" Y="1630"/>
+        <UsageCount Value="10"/>
+      </Unit5>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="336" Column="20" TopLine="316"/>
+        <Caret Line="529" Column="20" TopLine="509"/>
       </Position1>
       <Position2>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="358" Column="39" TopLine="338"/>
+        <Caret Line="545" Column="20" TopLine="525"/>
       </Position2>
       <Position3>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="458" Column="20" TopLine="438"/>
+        <Caret Line="560" Column="20" TopLine="540"/>
       </Position3>
       <Position4>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="463" Column="20" TopLine="443"/>
+        <Caret Line="565" Column="20" TopLine="545"/>
       </Position4>
       <Position5>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="468" Column="20" TopLine="448"/>
+        <Caret Line="56" Column="34" TopLine="45"/>
       </Position5>
       <Position6>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="473" Column="20" TopLine="453"/>
+        <Caret Line="262" Column="26" TopLine="242"/>
       </Position6>
       <Position7>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="446" Column="12" TopLine="439"/>
+        <Caret Line="358" Column="20" TopLine="338"/>
       </Position7>
       <Position8>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="458" Column="20" TopLine="438"/>
+        <Caret Line="506" Column="20" TopLine="501"/>
       </Position8>
       <Position9>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="463" Column="20" TopLine="443"/>
+        <Caret Line="61" Column="34" TopLine="50"/>
       </Position9>
       <Position10>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="468" Column="20" TopLine="448"/>
+        <Caret Line="322" Column="45" TopLine="311"/>
       </Position10>
       <Position11>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="473" Column="20" TopLine="453"/>
+        <Caret Line="61" Column="31" TopLine="50"/>
       </Position11>
       <Position12>
-        <Filename Value="painglassop.pas"/>
-        <Caret Line="9" Column="12"/>
+        <Filename Value="paneglass.pas"/>
+        <Caret Line="293" Column="19" TopLine="274"/>
       </Position12>
       <Position13>
-        <Filename Value="painglassop.pas"/>
-        <Caret Line="526" Column="28" TopLine="506"/>
+        <Filename Value="paneglass.pas"/>
+        <Caret Line="146" TopLine="234"/>
       </Position13>
       <Position14>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="489" Column="20" TopLine="469"/>
+        <Caret Line="157" Column="20" TopLine="148"/>
       </Position14>
       <Position15>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="504" Column="20" TopLine="484"/>
+        <Caret Line="293" Column="19" TopLine="273"/>
       </Position15>
       <Position16>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="509" Column="20" TopLine="489"/>
+        <Caret Line="144" Column="25" TopLine="132"/>
       </Position16>
       <Position17>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="52" Column="34" TopLine="41"/>
+        <Caret Line="157" Column="20" TopLine="143"/>
       </Position17>
       <Position18>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="336" Column="20" TopLine="322"/>
+        <Caret Line="284" Column="14" TopLine="273"/>
       </Position18>
       <Position19>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="358" Column="39" TopLine="347"/>
+        <Caret Line="293" Column="19" TopLine="273"/>
       </Position19>
       <Position20>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="509" TopLine="477"/>
+        <Caret Line="146" Column="4" TopLine="132"/>
       </Position20>
       <Position21>
-        <Filename Value="paneglass.pas"/>
-        <Caret Line="240" Column="28" TopLine="233"/>
+        <Filename Value="painglassop.pas"/>
+        <Caret Line="336" Column="21" TopLine="331"/>
       </Position21>
       <Position22>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="247" Column="28" TopLine="240"/>
+        <Caret Line="506" Column="20" TopLine="495"/>
       </Position22>
       <Position23>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="168" Column="11" TopLine="160"/>
+        <Caret Line="61" Column="34" TopLine="50"/>
       </Position23>
       <Position24>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="251" Column="7" TopLine="237"/>
+        <Caret Line="314" Column="34" TopLine="306"/>
       </Position24>
       <Position25>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="166" Column="24" TopLine="163"/>
+        <Caret Line="61" Column="31" TopLine="50"/>
       </Position25>
       <Position26>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="189" Column="8" TopLine="181"/>
+        <Caret Line="294" Column="18" TopLine="277"/>
       </Position26>
       <Position27>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="471" Column="20" TopLine="469"/>
+        <Caret Line="75" Column="11" TopLine="64"/>
       </Position27>
       <Position28>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="54" Column="34" TopLine="43"/>
+        <Caret Line="284" Column="14" TopLine="264"/>
       </Position28>
       <Position29>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="248" Column="26" TopLine="228"/>
+        <Caret Line="294" Column="18" TopLine="274"/>
       </Position29>
       <Position30>
         <Filename Value="paneglass.pas"/>
-        <Caret Line="344" Column="20" TopLine="324"/>
+        <Caret Line="537" Column="9" TopLine="517"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="paneglass.pas"/>
+        <Line Value="514"/>
+      </Item1>
+    </BreakPoints>
+  </Debugging>
 </CONFIG>
