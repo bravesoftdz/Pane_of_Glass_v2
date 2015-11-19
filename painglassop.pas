@@ -498,19 +498,21 @@ end;
 procedure TpainGlassOPform.Button3Click(Sender: TObject);
 var
 value: string;
-new_Trans_level : integer;
+new_Transparency_level : integer;
 begin
-value := InputBoxCst('New Transparency Level', 'Please enter the new Transparency Value from 64-255.', Trans_level.Text);
+value := InputBox('New Transparency Level',
+                     'Please enter a new Transparency Level from (64-255).',
+                     Trans_level.Text);
 if  Length(value) < 5 then
  begin
   if IsStrANumber(value) then
      begin
-         new_Trans_level := strtoint(value);
-         if (new_Trans_level < 64) or (new_Trans_level > 255) then
+         new_Transparency_level := strtoint(value);
+         if (new_Transparency_level < 64) or (new_Transparency_level > 255) then
              ShowMessageCst('New Transparency Level not valid number.')
          else
            begin
-              Trans_track.Position := new_Trans_level;
+              Trans_track.Position := new_Transparency_level;
               trans_level.Text := value;
            end;
        end

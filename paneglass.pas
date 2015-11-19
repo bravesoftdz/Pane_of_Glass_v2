@@ -70,17 +70,17 @@ type
     procedure f1Click(Sender: TObject);
   private
     { private declarations }
-    posT : integer;
-    posL : integer;
-    posW : integer;
-    posH : integer;
-    clickWindowT : integer;
-    ClickWindowL : integer;
-    Rpane : boolean;
-    OntopNow : boolean;
-    ResizedDone : boolean;
-    MultiMon : boolean;
-    windowStyle : integer;
+    _positionT     : integer;
+    _positionL     : integer;
+    _positionW     : integer;
+    _positionH     : integer;
+    _clickWindowT  : integer;
+    _ClickWindowL  : integer;
+    _Rpane         : boolean;
+    _OntopNow      : boolean;
+    _ResizedDone   : boolean;
+    _MultiMonitor  : boolean;
+    _windowStyle   : integer;
     public
     { public declarations }
     ClickThrough,onTop_CT : boolean;
@@ -105,11 +105,11 @@ begin
 
 if mode = 1 then
  begin
-  windowStyle := GetWindowLong(Self.Handle, GWL_EXSTYLE);
-  SetWindowLong(Self.Handle, GWL_EXSTYLE, windowStyle or WS_EX_TOOLWINDOW);
+  _windowStyle := GetWindowLong(Self.Handle, GWL_EXSTYLE);
+  SetWindowLong(Self.Handle, GWL_EXSTYLE, _windowStyle or WS_EX_TOOLWINDOW);
  end;
  if mode = 2 then
-  SetWindowLong(Self.Handle, GWL_EXSTYLE, windowStyle);
+  SetWindowLong(Self.Handle, GWL_EXSTYLE, _windowStyle);
 
 end;
 
@@ -130,18 +130,18 @@ end;
 procedure Tpanefrm.FormCreate(Sender: TObject);
 begin
 panefrm.show();
-MultiMon:=false;
+_MultiMonitor:=false;
 f1.Visible := false;
 SetWindowLong(Self.Handle, GWL_EXSTYLE, WS_EX_LAYERED);
 //SetWindowLong(Self.Handle, GWL_EXSTYLE, WS_EX_TRANSPARENT or WS_EX_LAYERED);
 //SetLayeredWindowAttributes(Self.Handle, 0, 255, LWA_ALPHA);
 ClickThrough := false;
 onTop_CT := false;
-ResizedDone := false;
+_ResizedDone := false;
 settings1.ShortCut := ShortCut(Word('S'), [ssAlt, ssShift]);
 if screen.MonitorCount > 1 then
   begin
-    MultiMon := true;
+    _MultiMonitor := true;
     f1.Visible := true;
     f1.ShortCut := ShortCut(Word('A'), [ssCtrl]);
   end;
@@ -188,18 +188,18 @@ procedure Tpanefrm.resizepanefrm();
 begin
    panefrm.Constraints.MinHeight:= 100;
    panefrm.Constraints.MinWidth := 100;
-   panefrm.Top := panefrm.posT;
-   panefrm.Left := panefrm.posL;
-   panefrm.Width := panefrm.posW;
-   panefrm.Height := panefrm.posH;
+   panefrm.Top := panefrm._positionT;
+   panefrm.Left := panefrm._positionL;
+   panefrm.Width := panefrm._positionW;
+   panefrm.Height := panefrm._positionH;
 end;
 
 procedure Tpanefrm.panefrmsize();
 begin
-   posT := panefrm.Top;
-   posL := panefrm.Left;
-   posW := panefrm.Width;
-   posH := panefrm.Height;
+   _positionT := panefrm.Top;
+   _positionL := panefrm.Left;
+   _positionW := panefrm.Width;
+   _positionH := panefrm.Height;
 end;
 
 procedure moveform();
@@ -288,17 +288,17 @@ end;
 
 procedure ClickThroughMode(Sender: TObject);
 begin
-panefrm.Rpane := false;
-panefrm.OntopNow := false;
+panefrm._Rpane := false;
+panefrm._OntopNow := false;
 if panefrm.Ontop1.checked then
   begin
-    panefrm.OntopNow := true;
+    panefrm._OntopNow := true;
     panefrm.Ontop1Click(panefrm.Ontop1);
   end;
 if panefrm.BorderStyle = bssizeable then
   begin
     //paneresizeable();
-    panefrm.Rpane := true;
+    panefrm._Rpane := true;
   end;
 end;
 
@@ -314,7 +314,7 @@ e1.Visible := value;
 painGlassOPform.resize_cb.Enabled := value;
 painGlassOPform.SpeedClick.Enabled := value;
 FSmode.Visible := value;
-if MultiMon then
+if _MultiMonitor then
   f1.Visible := value;
 
 if value then
@@ -377,10 +377,10 @@ end;*}
 
 procedure Tpanefrm.WMMove(var Message: TMessage) ;
 begin
-if ClickThrough and ResizedDone then
+if ClickThrough and _ResizedDone then
    begin
-     panefrm.Top  := ClickWindowT;
-     panefrm.Left := ClickWindowL;
+     panefrm.Top  := _ClickWindowT;
+     panefrm.Left := _ClickWindowL;
  end;
 end; (*WMMove*)
 
@@ -455,8 +455,8 @@ Mver := Mheight div 2;
 //saves current size
 panefrmsize();
 //ClickWindowT := Screen.WorkAreaTop;
-ClickWindowT := Mtop;
-ClickWindowL := Mleft;
+_ClickWindowT := Mtop;
+_ClickWindowL := Mleft;
 ClickThrough := true;
 
 case mode of
@@ -471,7 +471,7 @@ case mode of
      panefrm.Height := Mheight;
      panefrm.Top := Mtop;
      panefrm.Left := Mhor + Mleft;
-     ClickWindowL := panefrm.Left;
+     _ClickWindowL := panefrm.Left;
    end;
 2: begin
      panefrm.Width := Mwidth;
@@ -484,7 +484,7 @@ case mode of
     panefrm.Height := Mver;
     panefrm.Top := Mver + Mtop;
     panefrm.Left := Mleft;
-    ClickWindowT := panefrm.Top;
+    _ClickWindowT := panefrm.Top;
    end;
 4: begin
       panefrm.Width := Mwidth;
@@ -493,8 +493,8 @@ case mode of
       panefrm.Left := Mleft;
    end;
 5: begin
-    ClickWindowT := panefrm.Top;
-    ClickWindowL := panefrm.Left;
+    _ClickWindowT := panefrm.Top;
+    _ClickWindowL := panefrm.Left;
    end;
 6: begin
      panefrm.Width := MonitorInfo.Width;
@@ -513,7 +513,7 @@ end;//case
 ClickThroughMode_ED(panefrm);
 panefrm.Constraints.MinHeight := panefrm.Height;
 panefrm.Constraints.MinWidth := panefrm.Width;
-ResizedDone := true;
+_ResizedDone := true;
 end;
 
 procedure Tpanefrm.a1Click(Sender: TObject);
@@ -539,11 +539,11 @@ end;
 procedure Tpanefrm.DClickModeClick(Sender: TObject);
 begin
 ClickThrough := false;
-ResizedDone := false;
+_ResizedDone := false;
 ClickThroughMode_ED(Sender);
-if Rpane then
+if _Rpane then
    FormDblClick(panefrm.Resize1);
-if OntopNow then
+if _OntopNow then
    Ontop1Click(panefrm.Ontop1);
 end;
 
