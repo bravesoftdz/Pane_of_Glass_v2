@@ -422,7 +422,7 @@ end;
 
 procedure TpainGlassOPform.Button1Click(Sender: TObject);
 begin
-if panefrm.ClickThrough then
+if panefrm._ClickThrough then
    panefrm.DClickModeClick(panefrm.DClickMode);
 painGlassOPform.Close;
 halt;

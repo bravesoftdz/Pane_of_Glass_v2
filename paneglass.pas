@@ -83,7 +83,12 @@ type
     _windowStyle   : integer;
     public
     { public declarations }
-    ClickThrough,onTop_CT : boolean;
+    _ClickThrough  : boolean;
+    _onTop_CT      : boolean;
+    _OriginalWindowState: TWindowState;
+    _OriginalBounds: TRect;
+    procedure SwitchReSizeable;
+
   end;
 const
   f_txt = 'Bring Pane to Front';
@@ -99,6 +104,10 @@ uses painGlassOP;
 
 { Tpanefrm }
 
+function GetTaskBarSize: TRect;
+begin
+  SystemParametersInfo(SPI_GETWORKAREA, 0, @Result, 0);
+end;
 
 procedure Tpanefrm.HideAltTab(mode: integer);
 begin
@@ -116,14 +125,14 @@ end;
 procedure Tpanefrm.SetBottom();
 begin
 SetWindowPos(Self.Handle,HWND_BOTTOM,0,0,0,0,SWP_NOACTIVATE or SWP_NOMOVE or SWP_NOSIZE);
-onTop_CT := false;
+_onTop_CT := false;
 f_b.Caption := f_txt;
 end;
 
 procedure Tpanefrm.SetTop();
 begin
 SetWindowPos(Self.Handle,HWND_TOPMOST,0,0,0,0,SWP_NOACTIVATE or SWP_NOMOVE or SWP_NOSIZE);
-onTop_CT := true;
+_onTop_CT := true;
 f_b.Caption := b_txt;
 end;
 
@@ -135,8 +144,8 @@ f1.Visible := false;
 SetWindowLong(Self.Handle, GWL_EXSTYLE, WS_EX_LAYERED);
 //SetWindowLong(Self.Handle, GWL_EXSTYLE, WS_EX_TRANSPARENT or WS_EX_LAYERED);
 //SetLayeredWindowAttributes(Self.Handle, 0, 255, LWA_ALPHA);
-ClickThrough := false;
-onTop_CT := false;
+_ClickThrough := false;
+_onTop_CT := false;
 _ResizedDone := false;
 settings1.ShortCut := ShortCut(Word('S'), [ssAlt, ssShift]);
 if screen.MonitorCount > 1 then
@@ -150,7 +159,8 @@ end;
 
 procedure paneresizeable();
 begin
-panefrm.BorderStyle := bsnone;
+//panefrm.BorderStyle := bsNone;
+if panefrm.BorderStyle <> bsNone then panefrm.SwitchReSizeable;
 panefrm.resize1.Checked := false;
 painGlassOPform.resize_cb.Checked := false;
 end;
@@ -158,7 +168,7 @@ end;
 
 procedure Tpanefrm.FormDblClick(Sender: TObject);
 begin
-if not clickthrough then
+if not _ClickThrough then
 begin
  if panefrm.BorderStyle = bssizeable then
      paneresizeable()
@@ -179,7 +189,7 @@ end;
 
 procedure Tpanefrm.exit1Click(Sender: TObject);
 begin
-if ClickThrough then
+if _ClickThrough then
    DClickModeClick(panefrm.DClickMode);
 painGlassOPform.Button1Click(Sender);
 end;
@@ -213,7 +223,7 @@ end;
 procedure Tpanefrm.FormMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-if not clickthrough then
+if not _ClickThrough then
  begin
    if BUTTON = mbleft then
       moveform();
@@ -290,15 +300,17 @@ procedure ClickThroughMode(Sender: TObject);
 begin
 panefrm._Rpane := false;
 panefrm._OntopNow := false;
+ if panefrm.BorderStyle = bssizeable then
+   begin
+     //panefrm.BorderStyle := bsNone;
+     //paneresizeable();
+     panefrm._Rpane := true;
+   end;
+
 if panefrm.Ontop1.checked then
   begin
     panefrm._OntopNow := true;
     panefrm.Ontop1Click(panefrm.Ontop1);
-  end;
-if panefrm.BorderStyle = bssizeable then
-  begin
-    //paneresizeable();
-    panefrm._Rpane := true;
   end;
 end;
 
@@ -325,7 +337,7 @@ end;
 
 procedure Tpanefrm.ClickThroughMode_ED(Sender: TObject);
 begin
-if ClickThrough then
+if _ClickThrough then
     begin //enable clicktrhough mode
 
        ClickThroughMode(sender); //sets pane to none resizeable and on ontop
@@ -339,7 +351,7 @@ if ClickThrough then
        //sets window as top screen mode
        SetWindowPos(Self.Handle,HWND_TOPMOST,0,0,0,0, SWP_NOACTIVATE or SWP_NOMOVE or SWP_NOSIZE );
        painGlassOPform.SetTop();
-       onTop_CT := true;
+       _onTop_CT := true;
        panefrm.FormStyle:=fsSystemStayOnTop;
        HideAltTab(1);
     end
@@ -355,7 +367,7 @@ else
      panefrm.WindowState := wsNormal;
      VHPopupMenuItems(true);
      resizepanefrm();
-     onTop_CT := false;
+     _onTop_CT := false;
      panefrm.FormStyle:=fsNormal;;
     end;
 end;
@@ -377,7 +389,7 @@ end;*}
 
 procedure Tpanefrm.WMMove(var Message: TMessage) ;
 begin
-if ClickThrough and _ResizedDone then
+if _ClickThrough and _ResizedDone then
    begin
      panefrm.Top  := _ClickWindowT;
      panefrm.Left := _ClickWindowL;
@@ -457,8 +469,11 @@ panefrmsize();
 //ClickWindowT := Screen.WorkAreaTop;
 _ClickWindowT := Mtop;
 _ClickWindowL := Mleft;
-ClickThrough := true;
+_ClickThrough := true;
 
+//this need to be done before moving form overwise form end in middle of screen.
+//11/21/2015 09:49:19 JHWF
+paneresizeable();
 case mode of
 0: begin
      panefrm.Width := Mhor;
@@ -538,7 +553,7 @@ end;
 
 procedure Tpanefrm.DClickModeClick(Sender: TObject);
 begin
-ClickThrough := false;
+_ClickThrough := false;
 _ResizedDone := false;
 ClickThroughMode_ED(Sender);
 if _Rpane then
@@ -554,7 +569,7 @@ end;
 
 procedure Tpanefrm.f_bClick(Sender: TObject);
 begin
-if onTop_CT then
+if _onTop_CT then
   SetBottom()
 else
  SetTop();
@@ -572,5 +587,28 @@ begin
 ResizePaneForScreen(f1.Tag);
 end;
 
+procedure Tpanefrm.SwitchReSizeable;
+begin
+  if BorderStyle <> bsNone then
+  begin
+    // To full screen
+    _OriginalWindowState := WindowState;
+    _OriginalBounds := BoundsRect;
+
+    BorderStyle := bsNone;
+    //BoundsRect := Screen.MonitorFromWindow(Handle).BoundsRect;
+  end
+  else
+  begin
+    // From full screen
+    {$IFDEF MSWINDOWS}
+    BorderStyle := bsSizeable;
+    {$ENDIF}
+    if _OriginalWindowState = wsMaximized then
+      WindowState := wsMaximized
+    else
+      BoundsRect := _OriginalBounds;
+  end;
+end;
 end.
 
