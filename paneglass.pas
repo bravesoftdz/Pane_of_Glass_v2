@@ -124,9 +124,9 @@ end;
 
 procedure Tpanefrm.SetBottom();
 begin
-SetWindowPos(Self.Handle,HWND_BOTTOM,0,0,0,0,SWP_NOACTIVATE or SWP_NOMOVE or SWP_NOSIZE);
-_onTop_CT := false;
-f_b.Caption := f_txt;
+     SetWindowPos(Self.Handle,HWND_BOTTOM,0,0,0,0,SWP_NOACTIVATE or SWP_NOMOVE or SWP_NOSIZE);
+     _onTop_CT := false;
+     f_b.Caption := f_txt;
 end;
 
 procedure Tpanefrm.SetTop();
@@ -185,6 +185,7 @@ procedure Tpanefrm.DisablePrankClick(Sender: TObject);
 begin
   prankImage.Visible := False;
   DClickModeClick(Sender);
+
 end;
 
 procedure Tpanefrm.exit1Click(Sender: TObject);
@@ -260,7 +261,7 @@ procedure Tpanefrm.prankModeClick(Sender: TObject);
 var
   MyBitmap: TBitmap;
   ScreenDC: HDC;
- // WrkJpg: TJpegImage;
+  WrkJpg: TJpegImage;
 
 
 begin
@@ -273,6 +274,16 @@ begin
       ScreenDC := GetDC(0);
       MyBitmap.LoadFromDevice(ScreenDC);
 
+      //create jpg for debug
+      WrkJpg := TJpegImage.Create;
+      try
+        WrkJpg.CompressionQuality := 80;
+        WrkJpg.Assign(MyBitmap);
+        WrkJpg.SaveToFile('scrren.jpg');
+      finally
+        FreeAndNil(WrkJpg);
+      end;
+
       Application.Restore;
       Application.BringToFront;
 
@@ -281,7 +292,7 @@ begin
       prankImage.Visible:=True;
       //need to set to full screen mode and enable click through with 255 transparancy.
       prankImage.Canvas.Draw(0,0,MyBitmap);
-
+      ReleaseDC(0, ScreenDC);
 
 end;
 
@@ -429,7 +440,8 @@ procedure Tpanefrm.ResizePaneForScreen(mode : integer);
 var Mver,Mhor : integer;
     Mwidth, Mheight, Mtop, Mleft : integer;
     i : integer;
-    MontInfo, MonitorInfo : TMonitor;
+    //MontInfo,
+    MonitorInfo : TMonitor;
 begin
 //0 horizonal left
 //1 horizonal right
