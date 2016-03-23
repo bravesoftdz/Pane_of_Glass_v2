@@ -262,6 +262,10 @@ var
   MyBitmap: TBitmap;
   ScreenDC: HDC;
   WrkJpg: TJpegImage;
+  mon_count : integer;
+  Higest_mon : integer;
+  offset_draw_x : integer;
+
 
 
 begin
@@ -291,7 +295,24 @@ begin
       prankImage.Align:=alClient;
       prankImage.Visible:=True;
       //need to set to full screen mode and enable click through with 255 transparancy.
-      prankImage.Canvas.Draw(0,0,MyBitmap);
+      if Screen.MonitorCount > 1 then
+      begin  //multi mointor set up}
+        Higest_mon := 1;
+        for mon_count := 2 to Screen.MonitorCount do
+          begin
+              if Screen.Monitors[mon_count].Height > Screen.Monitors[Higest_mon].Height then
+                 Higest_mon := mon_count;
+          end;
+        if Higest_mon <>  1 then
+        begin
+           offset_draw_x := Screen.Monitors[Higest_mon].Height - Screen.Monitors[1].Height;
+           prankImage.Canvas.Draw(offset_draw_x,0,MyBitmap);
+        end
+        else
+            prankImage.Canvas.Draw(0,0,MyBitmap);
+      end
+      else
+          prankImage.Canvas.Draw(0,0,MyBitmap);
       ReleaseDC(0, ScreenDC);
 
 end;
