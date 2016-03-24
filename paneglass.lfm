@@ -1,7 +1,7 @@
 object panefrm: Tpanefrm
-  Left = 618
+  Left = 327
   Height = 239
-  Top = 199
+  Top = 161
   Width = 370
   HorzScrollBar.Page = 90
   VertScrollBar.Page = 90

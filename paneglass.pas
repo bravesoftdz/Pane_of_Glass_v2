@@ -264,9 +264,10 @@ var
   WrkJpg: TJpegImage;
   mon_count : integer;
   Higest_mon : integer;
-  offset_draw_x : integer;
+  offset_draw_y : integer;
 
-
+  i: Integer;
+  aMonitor, LeftMostMonitor: TMonitor;
 
 begin
       Application.Minimize;
@@ -278,7 +279,9 @@ begin
       ScreenDC := GetDC(0);
       MyBitmap.LoadFromDevice(ScreenDC);
 
+      {$DEFINE debugprank}
       //create jpg for debug
+      {$ifdef debugprank}
       WrkJpg := TJpegImage.Create;
       try
         WrkJpg.CompressionQuality := 80;
@@ -287,6 +290,7 @@ begin
       finally
         FreeAndNil(WrkJpg);
       end;
+      {$endif}
 
       Application.Restore;
       Application.BringToFront;
@@ -297,16 +301,23 @@ begin
       //need to set to full screen mode and enable click through with 255 transparancy.
       if Screen.MonitorCount > 1 then
       begin  //multi mointor set up}
-        Higest_mon := 1;
-        for mon_count := 2 to Screen.MonitorCount do
+        Higest_mon := 0;
+        for mon_count := 1 to Screen.MonitorCount -1 do
           begin
               if Screen.Monitors[mon_count].Height > Screen.Monitors[Higest_mon].Height then
                  Higest_mon := mon_count;
           end;
+        LeftMostMonitor := Screen.Monitors[0];
+        for i := 1 to Screen.MonitorCount-1 do
+        begin
+            aMonitor := Screen.Monitors[i];
+            if aMonitor.Left < LeftMostMonitor.Left then
+               LeftMostMonitor := aMonitor;
+        end;
         if Higest_mon <>  1 then
         begin
-           offset_draw_x := Screen.Monitors[Higest_mon].Height - Screen.Monitors[1].Height;
-           prankImage.Canvas.Draw(offset_draw_x,0,MyBitmap);
+           offset_draw_y := Screen.Monitors[Higest_mon].Height - LeftMostMonitor.Height;
+           prankImage.Canvas.Draw(0,offset_draw_y,MyBitmap);
         end
         else
             prankImage.Canvas.Draw(0,0,MyBitmap);
