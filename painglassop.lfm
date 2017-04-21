@@ -1,13 +1,13 @@
 object painGlassOPform: TpainGlassOPform
-  Left = 478
+  Left = 451
   Height = 174
-  Top = 299
-  Width = 259
+  Top = 260
+  Width = 239
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'Pane of Glass Options'
   ClientHeight = 174
-  ClientWidth = 259
+  ClientWidth = 239
   FormStyle = fsStayOnTop
   OnClose = FormClose
   OnCreate = FormCreate
@@ -15,16 +15,16 @@ object painGlassOPform: TpainGlassOPform
   OnShow = FormShow
   PopupMenu = panefrm.pane_PopupMenu
   ShowInTaskBar = stNever
-  LCLVersion = '1.4.2.0'
+  LCLVersion = '1.6.4.0'
   object GroupBox1: TGroupBox
     Left = 0
     Height = 82
     Top = 0
-    Width = 259
+    Width = 239
     Align = alTop
     Caption = 'Transparency Level'
     ClientHeight = 62
-    ClientWidth = 255
+    ClientWidth = 235
     TabOrder = 0
     object Label1: TLabel
       Left = 16
@@ -107,7 +107,7 @@ object painGlassOPform: TpainGlassOPform
       Left = 0
       Height = 33
       Top = 0
-      Width = 255
+      Width = 239
       Max = 255
       Min = 64
       OnChange = Trans_trackChange
@@ -136,10 +136,10 @@ object painGlassOPform: TpainGlassOPform
     Left = 0
     Height = 92
     Top = 82
-    Width = 259
+    Width = 239
     Align = alClient
     ClientHeight = 92
-    ClientWidth = 259
+    ClientWidth = 239
     TabOrder = 1
     object colour_box: TGroupBox
       Left = 0

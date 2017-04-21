@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Windows, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls,  LCLIntf, LCLType, ComCtrls;
+  ExtCtrls, StdCtrls,  LCLIntf, LCLType, ComCtrls, Clipbrd;
 // painGlassop;
 
 
@@ -87,7 +87,10 @@ type
     _onTop_CT      : boolean;
     _OriginalWindowState: TWindowState;
     _OriginalBounds: TRect;
+    _old_transpancy_value : integer;
+	//_old
     procedure SwitchReSizeable;
+    procedure Setup_PrankMode(Setup_Prank : Boolean; Prank_Mode : integer);
 
   end;
 const
@@ -139,7 +142,7 @@ end;
 procedure Tpanefrm.FormCreate(Sender: TObject);
 begin
 panefrm.show();
-_MultiMonitor:=false;
+_MultiMonitor := false;
 f1.Visible := false;
 SetWindowLong(Self.Handle, GWL_EXSTYLE, WS_EX_LAYERED);
 //SetWindowLong(Self.Handle, GWL_EXSTYLE, WS_EX_TRANSPARENT or WS_EX_LAYERED);
@@ -154,6 +157,7 @@ if screen.MonitorCount > 1 then
     f1.Visible := true;
     f1.ShortCut := ShortCut(Word('A'), [ssCtrl]);
   end;
+  _old_transpancy_value := 64;
 end;
 
 
@@ -185,6 +189,7 @@ procedure Tpanefrm.DisablePrankClick(Sender: TObject);
 begin
   prankImage.Visible := False;
   DClickModeClick(Sender);
+  Setup_PrankMode(False, 0);
 
 end;
 
@@ -257,6 +262,29 @@ begin
   //Label4.caption :=IntToStr (panefrm.Left);
 end;
 
+procedure Tpanefrm.Setup_PrankMode(Setup_Prank : Boolean; Prank_Mode : integer);
+begin
+ if Setup_Prank = True then
+    begin
+        _old_transpancy_value := panefrm.AlphaBlendValue;
+		case Prank_Mode of
+			 1 : panefrm.AlphaBlendValue := 128;
+		else
+			panefrm.AlphaBlendValue := 255;
+		end;
+
+        pane_TrayIcon.Visible := False;
+    end
+ else
+    begin
+		panefrm.AlphaBlendValue := _old_transpancy_value;
+		pane_TrayIcon.Visible := True;
+		prankImage.Visible := False;
+                prankImage.Picture.Clear;
+    end;
+
+end;
+
 procedure Tpanefrm.prankModeClick(Sender: TObject);
 var
   MyBitmap: TBitmap;
@@ -265,19 +293,72 @@ var
   mon_count : integer;
   Higest_mon : integer;
   offset_draw_y : integer;
+  mleft: integer;
+  mtop: integer;
+  mright: integer;
+  mbottom: integer;
+
+  PictureAvailable : boolean;
 
   i: Integer;
   aMonitor, LeftMostMonitor: TMonitor;
 
 begin
-      Application.Minimize;
-      Application.ProcessMessages;
+//      Application.Minimize;
+//      Application.ProcessMessages;
 
-      Sleep(32);
+//      Sleep(32);
+//      ScreenDC := GetDC(0);
+  _old_transpancy_value := panefrm.AlphaBlendValue;
+  MyBitmap := TBitmap.Create;
+  mleft := 0;
+  mtop := 0;
+  mright := GetSystemMetrics(SM_XVIRTUALSCREEN);
+  mbottom := GetSystemMetrics(SM_CYSCREEN);
 
-      MyBitmap := TBitmap.Create;
-      ScreenDC := GetDC(0);
-      MyBitmap.LoadFromDevice(ScreenDC);
+  if Screen.MonitorCount > 1 then
+  begin
+       Application.Minimize;
+       Application.ProcessMessages;
+       Sleep(100);
+       Sleep(100);
+       Sleep(100);
+       Sleep(100);
+
+       Keybd_event(VK_SNAPSHOT, 0, 0, 0);
+       Keybd_event(VK_SNAPSHOT, 0, KEYEVENTF_KEYUP, 0);
+       Sleep(32);
+
+       PictureAvailable :=false;
+
+       if Clipboard.HasFormat(PredefinedClipboardFormat(pcfDelphiBitmap)) then
+       begin
+          PictureAvailable:=true;
+       end;
+       if Clipboard.HasFormat(PredefinedClipboardFormat(pcfBitmap)) then
+       begin
+          PictureAvailable:=true;
+       end;
+
+       if PictureAvailable then
+       begin
+            //ShowMessage('It is an image');
+            MyBitmap := TBitmap.Create;
+            if Clipboard.HasFormat(PredefinedClipboardFormat(pcfDelphiBitmap)) then
+               MyBitmap.LoadFromClipboardFormat(PredefinedClipboardFormat(pcfDelphiBitmap));
+
+            if Clipboard.HasFormat(PredefinedClipboardFormat(pcfBitmap)) then
+               MyBitmap.LoadFromClipboardFormat(PredefinedClipboardFormat(pcfBitmap));
+       end;
+  end
+  else
+  begin
+        Application.Minimize;
+        Application.ProcessMessages;
+        sleep(32);
+        ScreenDC := GetDC(0);
+        MyBitmap.LoadFromDevice(ScreenDC);
+  end;										 
 
       {$DEFINE debugprank}
       //create jpg for debug
@@ -286,18 +367,18 @@ begin
       try
         WrkJpg.CompressionQuality := 80;
         WrkJpg.Assign(MyBitmap);
-        WrkJpg.SaveToFile('scrren.jpg');
+        WrkJpg.SaveToFile('screen.jpg');
       finally
         FreeAndNil(WrkJpg);
       end;
       {$endif}
 
-      Application.Restore;
+{      Application.Restore;
       Application.BringToFront;
-
+}
       ResizePaneForScreen(7);
-      prankImage.Align:=alClient;
-      prankImage.Visible:=True;
+      prankImage.Align := alClient;
+      prankImage.Visible := True;
       //need to set to full screen mode and enable click through with 255 transparancy.
       if Screen.MonitorCount > 1 then
       begin  //multi mointor set up}
@@ -324,7 +405,15 @@ begin
       end
       else
           prankImage.Canvas.Draw(0,0,MyBitmap);
+ if Screen.MonitorCount = 1 then
       ReleaseDC(0, ScreenDC);
+
+ Setup_PrankMode(True, 0);
+
+  MyBitmap.Destroy;
+
+  Application.Restore;
+  Application.BringToFront;
 
 end;
 
