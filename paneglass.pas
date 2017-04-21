@@ -17,6 +17,7 @@ type
   Tpanefrm = class(TForm)
     exit1: TMenuItem;
     DisablePrank: TMenuItem;
+    GhostMode: TMenuItem;
     prankImage: TImage;
     prankMode: TMenuItem;
     Ontop1: TMenuItem;
@@ -43,6 +44,7 @@ type
     procedure exit1Click(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure GhostModeClick(Sender: TObject);
     procedure Ontop1Click(Sender: TObject);
     procedure prankImageResize(Sender: TObject);
     procedure prankModeClick(Sender: TObject);
@@ -90,6 +92,7 @@ type
     _old_transpancy_value : integer;
 	//_old
     procedure SwitchReSizeable;
+    procedure Start_PrankMode(Prank_type : integer);
     procedure Setup_PrankMode(Setup_Prank : Boolean; Prank_Mode : integer);
 
   end;
@@ -188,9 +191,8 @@ end;
 procedure Tpanefrm.DisablePrankClick(Sender: TObject);
 begin
   prankImage.Visible := False;
-  DClickModeClick(Sender);
   Setup_PrankMode(False, 0);
-
+  DClickModeClick(Sender);
 end;
 
 procedure Tpanefrm.exit1Click(Sender: TObject);
@@ -267,12 +269,7 @@ begin
  if Setup_Prank = True then
     begin
         _old_transpancy_value := panefrm.AlphaBlendValue;
-		case Prank_Mode of
-			 1 : panefrm.AlphaBlendValue := 128;
-		else
-			panefrm.AlphaBlendValue := 255;
-		end;
-
+	panefrm.AlphaBlendValue := Prank_Mode;
         pane_TrayIcon.Visible := False;
     end
  else
@@ -285,7 +282,7 @@ begin
 
 end;
 
-procedure Tpanefrm.prankModeClick(Sender: TObject);
+procedure Tpanefrm.Start_PrankMode(Prank_type : integer);
 var
   MyBitmap: TBitmap;
   ScreenDC: HDC;
@@ -293,33 +290,22 @@ var
   mon_count : integer;
   Higest_mon : integer;
   offset_draw_y : integer;
-  mleft: integer;
-  mtop: integer;
-  mright: integer;
-  mbottom: integer;
-
   PictureAvailable : boolean;
 
   i: Integer;
   aMonitor, LeftMostMonitor: TMonitor;
 
 begin
-//      Application.Minimize;
-//      Application.ProcessMessages;
 
-//      Sleep(32);
-//      ScreenDC := GetDC(0);
   _old_transpancy_value := panefrm.AlphaBlendValue;
   MyBitmap := TBitmap.Create;
-  mleft := 0;
-  mtop := 0;
-  mright := GetSystemMetrics(SM_XVIRTUALSCREEN);
-  mbottom := GetSystemMetrics(SM_CYSCREEN);
 
   if Screen.MonitorCount > 1 then
   begin
        Application.Minimize;
        Application.ProcessMessages;
+       //need to hide from taskbar
+
        Sleep(100);
        Sleep(100);
        Sleep(100);
@@ -343,7 +329,7 @@ begin
        if PictureAvailable then
        begin
             //ShowMessage('It is an image');
-            MyBitmap := TBitmap.Create;
+            //MyBitmap := TBitmap.Create;
             if Clipboard.HasFormat(PredefinedClipboardFormat(pcfDelphiBitmap)) then
                MyBitmap.LoadFromClipboardFormat(PredefinedClipboardFormat(pcfDelphiBitmap));
 
@@ -358,9 +344,9 @@ begin
         sleep(32);
         ScreenDC := GetDC(0);
         MyBitmap.LoadFromDevice(ScreenDC);
-  end;										 
+  end;
 
-      {$DEFINE debugprank}
+      //{$DEFINE debugprank}
       //create jpg for debug
       {$ifdef debugprank}
       WrkJpg := TJpegImage.Create;
@@ -408,13 +394,21 @@ begin
  if Screen.MonitorCount = 1 then
       ReleaseDC(0, ScreenDC);
 
- Setup_PrankMode(True, 0);
+ Setup_PrankMode(True, Prank_type);
 
   MyBitmap.Destroy;
-
   Application.Restore;
   Application.BringToFront;
+end;
 
+procedure Tpanefrm.prankModeClick(Sender: TObject);
+begin
+    Start_PrankMode(250);
+end;
+
+procedure Tpanefrm.GhostModeClick(Sender: TObject);
+begin
+  Start_PrankMode(150);
 end;
 
 procedure Tpanefrm.Settings1Click(Sender: TObject);

@@ -14,6 +14,13 @@ type
 
   { TpainGlassOPform }
 
+  TWMHotKey = packed record
+    Msg: Cardinal;
+    HotKey: Longint;
+    Unused: Longint;
+    Result: Longint;
+  end;
+
   TpainGlassOPform = class(TForm)
    ColorDialog1: TColorDialog;
     GroupBox1: TGroupBox;
@@ -54,7 +61,8 @@ type
   loadfile : boolean;
   TrayIconData: TNotifyIconData;
   id1, id2, id3, id4: Integer;
-  //procedure WMHotKey(var Msg: TWMHotKey); message WM_HOTKEY;
+  prank_HK, ghost_HK, disablePrank_HK : Integer;
+  procedure WMHotKey(var Msg: TWMHotKey); message WM_HOTKEY;
   public
     { public declarations }
     panecolour : TColor;
@@ -235,20 +243,20 @@ begin
 end;
 
 { TpainGlassOPform }
-{
+
 procedure TpainGlassOPform.WMHotKey(var Msg: TWMHotKey);
 begin
   if Msg.HotKey = id1 then
-    if panefrm.ClickThrough then
+    if panefrm._ClickThrough then
       panefrm.DClickModeClick(panefrm.DClickMode)
     else
       panefrm.ClickThrough1Click(panefrm.ClickThrough1);
   if Msg.HotKey = id2 then
-    if not form1.Visible and panefrm.ClickThrough then
-     form1.Show;
+    if not painGlassOPform.Visible and panefrm._ClickThrough then
+     painGlassOPform.Show;
   if Msg.HotKey = id3 then
-    if panefrm.ClickThrough then
-       if panefrm.onTop_CT then
+    if panefrm._ClickThrough then
+       if panefrm._onTop_CT then
          begin//set bottom
            panefrm.SetBottom();
            Offtop();
@@ -260,10 +268,17 @@ begin
          end;
 
    if Msg.HotKey = id4 then
-     if panefrm.ClickThrough then
+     if panefrm._ClickThrough then
        panefrm.exit1Click(panefrm.exit1);
+
+{   if Msg.HotKey = prank_HK then
+     aaa
+   if Msg.HotKey = ghost_HK then
+     aaa                               }
+   if Msg.HotKey = disablePrank_HK then
+     panefrm.DisablePrankClick(panefrm.DisablePrank);
 end;
-}
+
 {
 procedure TpainGlassOPform.TrayMessage(var Msg: TMessage);
 var
@@ -366,6 +381,20 @@ begin
   if not RegisterHotKey(Handle, id4, MOD_SHIFT + MOD_CONTROL + MOD_ALT, VK_X) then
      ShowMessage ('Unable to assign Ctrl-Shift-Alt-X as hotkey.');
   loadfile := true;
+
+
+  prank_HK := GlobalAddAtom('PoG_Hotkey5');
+  if not RegisterHotKey(Handle, prank_HK, MOD_SHIFT + MOD_ALT, VK_P) then
+    ShowMessage('Unable to assign Shift-Alt-P as hotkey.') ;
+  //ghost_HK
+  ghost_HK := GlobalAddAtom('PoG_Hotkey5');
+  if not RegisterHotKey(Handle, ghost_HK, MOD_SHIFT + MOD_ALT, VK_G) then
+    ShowMessage('Unable to assign Shift-Alt-G as hotkey.');
+  //disablePrank_HK
+  disablePrank_HK := GlobalAddAtom('PoG_Hotkey5');
+  if not RegisterHotKey(Handle, disablePrank_HK, MOD_SHIFT + MOD_ALT, VK_D) then
+    ShowMessage('Unable to assign Shift-Alt-D as hotkey.') ;
+
   {
   with TrayIconData do
   begin

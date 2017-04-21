@@ -1,13 +1,13 @@
 object painGlassOPform: TpainGlassOPform
-  Left = 451
+  Left = 441
   Height = 174
-  Top = 260
-  Width = 239
+  Top = 259
+  Width = 242
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'Pane of Glass Options'
   ClientHeight = 174
-  ClientWidth = 239
+  ClientWidth = 242
   FormStyle = fsStayOnTop
   OnClose = FormClose
   OnCreate = FormCreate
@@ -20,11 +20,11 @@ object painGlassOPform: TpainGlassOPform
     Left = 0
     Height = 82
     Top = 0
-    Width = 239
+    Width = 242
     Align = alTop
     Caption = 'Transparency Level'
     ClientHeight = 62
-    ClientWidth = 235
+    ClientWidth = 238
     TabOrder = 0
     object Label1: TLabel
       Left = 16
@@ -136,10 +136,10 @@ object painGlassOPform: TpainGlassOPform
     Left = 0
     Height = 92
     Top = 82
-    Width = 239
+    Width = 242
     Align = alClient
     ClientHeight = 92
-    ClientWidth = 239
+    ClientWidth = 242
     TabOrder = 1
     object colour_box: TGroupBox
       Left = 0
