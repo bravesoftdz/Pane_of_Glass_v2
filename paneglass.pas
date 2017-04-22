@@ -6,9 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Windows, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls,  LCLIntf, LCLType, ComCtrls, Clipbrd;
+  ExtCtrls, StdCtrls,  LCLIntf, LCLType, ComCtrls, Clipbrd, LResources, Crt;
 // painGlassop;
-
 
 type
 
@@ -90,7 +89,7 @@ type
     _OriginalWindowState: TWindowState;
     _OriginalBounds: TRect;
     _old_transpancy_value : integer;
-	//_old
+    //_old
     procedure SwitchReSizeable;
     procedure Start_PrankMode(Prank_type : integer);
     procedure Setup_PrankMode(Setup_Prank : Boolean; Prank_Mode : integer);
@@ -126,6 +125,27 @@ if mode = 1 then
  if mode = 2 then
   SetWindowLong(Self.Handle, GWL_EXSTYLE, _windowStyle);
 
+end;
+
+function get_readyForScreenshot : Integer;
+var
+    i : integer;
+begin
+    Application.Minimize;
+    Application.ProcessMessages;
+    //need to hide from taskbar
+    Application.MainFormOnTaskbar := False;
+    panefrm.HideAltTab(1);
+    i := 0;
+    Delay(1000);
+    while( i < 10 ) do
+    begin
+        //Sleep(1000);
+        Delay(10);
+        i := i + 1 ;
+    end;
+    
+    get_readyForScreenshot := 1;
 end;
 
 procedure Tpanefrm.SetBottom();
@@ -191,6 +211,8 @@ end;
 procedure Tpanefrm.DisablePrankClick(Sender: TObject);
 begin
   prankImage.Visible := False;
+  Application.MainFormOnTaskbar := True;
+
   Setup_PrankMode(False, 0);
   DClickModeClick(Sender);
 end;
@@ -269,14 +291,14 @@ begin
  if Setup_Prank = True then
     begin
         _old_transpancy_value := panefrm.AlphaBlendValue;
-	panefrm.AlphaBlendValue := Prank_Mode;
+    panefrm.AlphaBlendValue := Prank_Mode;
         pane_TrayIcon.Visible := False;
     end
  else
     begin
-		panefrm.AlphaBlendValue := _old_transpancy_value;
-		pane_TrayIcon.Visible := True;
-		prankImage.Visible := False;
+        panefrm.AlphaBlendValue := _old_transpancy_value;
+        pane_TrayIcon.Visible := True;
+        prankImage.Visible := False;
                 prankImage.Picture.Clear;
     end;
 
@@ -299,23 +321,15 @@ begin
 
   _old_transpancy_value := panefrm.AlphaBlendValue;
   MyBitmap := TBitmap.Create;
+  PictureAvailable := false;
+  
 
-  if Screen.MonitorCount > 1 then
-  begin
-       Application.Minimize;
-       Application.ProcessMessages;
-       //need to hide from taskbar
-
-       Sleep(100);
-       Sleep(100);
-       Sleep(100);
-       Sleep(100);
-
+{  if Screen.MonitorCount > 1 then
+  begin}
+       get_readyForScreenshot();
        Keybd_event(VK_SNAPSHOT, 0, 0, 0);
        Keybd_event(VK_SNAPSHOT, 0, KEYEVENTF_KEYUP, 0);
        Sleep(32);
-
-       PictureAvailable :=false;
 
        if Clipboard.HasFormat(PredefinedClipboardFormat(pcfDelphiBitmap)) then
        begin
@@ -336,15 +350,16 @@ begin
             if Clipboard.HasFormat(PredefinedClipboardFormat(pcfBitmap)) then
                MyBitmap.LoadFromClipboardFormat(PredefinedClipboardFormat(pcfBitmap));
        end;
-  end
+{  end
   else
   begin
         Application.Minimize;
         Application.ProcessMessages;
+        Application.MainFormOnTaskbar := False;
         sleep(32);
         ScreenDC := GetDC(0);
         MyBitmap.LoadFromDevice(ScreenDC);
-  end;
+  end;  }
 
       //{$DEFINE debugprank}
       //create jpg for debug
@@ -408,7 +423,7 @@ end;
 
 procedure Tpanefrm.GhostModeClick(Sender: TObject);
 begin
-  Start_PrankMode(150);
+  Start_PrankMode(160);
 end;
 
 procedure Tpanefrm.Settings1Click(Sender: TObject);
@@ -462,7 +477,10 @@ else
 end;
 
 procedure Tpanefrm.ClickThroughMode_ED(Sender: TObject);
+var
+  h :THandle;
 begin
+h := FindWindow('Window', PChar(Application.Title));
 if _ClickThrough then
     begin //enable clicktrhough mode
 
@@ -470,6 +488,7 @@ if _ClickThrough then
        // sets click throughable
        SetWindowLong(Self.Handle, GWL_EXSTYLE, WS_EX_TRANSPARENT or WS_EX_LAYERED);
        //ShowWindow(Self.Handle, SW_HIDE);
+       ShowWindow(h, SW_HIDE);
        //hides popup menu functions menu function
        VHPopupMenuItems(false);
        if painGlassOPform.Visible then
@@ -490,6 +509,7 @@ else
      //stops click throught mode
      SetWindowLong(Self.Handle, GWL_EXSTYLE, WS_EX_LAYERED);
      //ShowWindow(Application.Handle, SW_SHOW);
+     ShowWindow(h, SW_SHOW) ;
      panefrm.WindowState := wsNormal;
      VHPopupMenuItems(true);
      resizepanefrm();
